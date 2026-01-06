@@ -29,3 +29,22 @@ DELETE http://localhost:5001/users/4
 GET http://localhost:5001/dbusers
 ###
 GET http://localhost:5001/dbusers/5
+
+###
+POST http://localhost:5001/signup
+Content-Type: application/json
+
+{
+    "Username": "newuser",
+    "PasswordHash": "SecurePassword123",
+    "Email": "newuser@example.com"
+}
+
+###
+POST http://localhost:5001/login
+Content-Type: application/json
+
+{
+    "Username": "newuser",
+    "PasswordHash": "SecurePassword123"
+}

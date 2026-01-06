@@ -2,6 +2,7 @@ using Microsoft.EntityFrameworkCore;
 using WebApplication1.Data;
 using WebApplication1.EndPoints;
 
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
@@ -55,7 +56,7 @@ using (var scope = app.Services.CreateScope())
 }
 
 
-
+app.MapSignupLoginEndpoints();
 // app.MapUserEndpoints(); 
 app.MapUserDBEndpoints();
 

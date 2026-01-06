@@ -117,3 +117,12 @@ c:\Users\kanis\Documents\Overleap Applications\Task-Llist-App\WebApplication1\ob
 c:\Users\kanis\Documents\Overleap Applications\Task-Llist-App\WebApplication1\obj\Debug\net9.0\WebApplication1.pdb
 c:\Users\kanis\Documents\Overleap Applications\Task-Llist-App\WebApplication1\obj\Debug\net9.0\WebApplication1.genruntimeconfig.cache
 c:\Users\kanis\Documents\Overleap Applications\Task-Llist-App\WebApplication1\obj\Debug\net9.0\ref\WebApplication1.dll
+C:\Users\kanis\Documents\Overleap Applications\Task-Llist-App\WebApplication1\bin\Debug\net9.0\BCrypt.Net-Next.dll
+C:\Users\kanis\Documents\Overleap Applications\Task-Llist-App\WebApplication1\bin\Debug\net9.0\Microsoft.AspNetCore.Authentication.JwtBearer.dll
+C:\Users\kanis\Documents\Overleap Applications\Task-Llist-App\WebApplication1\bin\Debug\net9.0\Microsoft.IdentityModel.Abstractions.dll
+C:\Users\kanis\Documents\Overleap Applications\Task-Llist-App\WebApplication1\bin\Debug\net9.0\Microsoft.IdentityModel.JsonWebTokens.dll
+C:\Users\kanis\Documents\Overleap Applications\Task-Llist-App\WebApplication1\bin\Debug\net9.0\Microsoft.IdentityModel.Logging.dll
+C:\Users\kanis\Documents\Overleap Applications\Task-Llist-App\WebApplication1\bin\Debug\net9.0\Microsoft.IdentityModel.Protocols.dll
+C:\Users\kanis\Documents\Overleap Applications\Task-Llist-App\WebApplication1\bin\Debug\net9.0\Microsoft.IdentityModel.Protocols.OpenIdConnect.dll
+C:\Users\kanis\Documents\Overleap Applications\Task-Llist-App\WebApplication1\bin\Debug\net9.0\Microsoft.IdentityModel.Tokens.dll
+C:\Users\kanis\Documents\Overleap Applications\Task-Llist-App\WebApplication1\bin\Debug\net9.0\System.IdentityModel.Tokens.Jwt.dll
