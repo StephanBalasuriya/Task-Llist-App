@@ -1,35 +1,4 @@
 
-###
-GET http://localhost:5001/
-###
-GET http://localhost:5001/users
-
-###
-GET http://localhost:5001/users/3
-###
-POST http://localhost:5001/users   
-Content-Type: application/json
-
-{
-    "username": "newuser",
-    "email": "newuser@example.com"
-}
-
-###
-PUT http://localhost:5001/users/2
-Content-Type: application/json
-
-{
-    "username": "updateduser",
-    "email": "updateduser@example.com"
-}
-###
-DELETE http://localhost:5001/users/4
-
-
-
-
-
 @token = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJuYW1laWQiOiIxIiwidW5pcXVlX25hbWUiOiJuZXd1c2VyIiwibmJmIjoxNzY3NzY1NjE5LCJleHAiOjE3Njc3NjkyMTksImlhdCI6MTc2Nzc2NTYxOSwiaXNzIjoiaHR0cDovL2xvY2FsaG9zdDo1MDAxLyIsImF1ZCI6Imh0dHA6Ly9sb2NhbGhvc3Q6NTAwMS8ifQ.NiTx7PXx1T0MJ6ooN7i0f35LawXOhNbm8YZIYaDUPE0
 
 ###
@@ -104,6 +73,6 @@ Content-Type: application/json
 }
 
 ###
-DELETE http://localhost:5001/tasks/delete/4
+DELETE http://localhost:5001/tasks/delete/1
 Authorization: Bearer {{token}}
 
