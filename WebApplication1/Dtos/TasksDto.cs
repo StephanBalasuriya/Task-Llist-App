@@ -15,8 +15,8 @@ public record TaskUpsertDto(
     string Title,
     string? Description,
     TaskStatusDto Status,
-    DateTime? DueDate,
-    [Required] int? UserId
+    DateTime? DueDate
+    // [Required] int? UserId
 );
 
 // Transport shape for returning task details
@@ -27,7 +27,8 @@ public record TaskDetailsDto(
     TaskStatusDto Status,
     DateTime? CreatedAt,
     DateTime? DueDate,
-    DateTime? UpdatedAt,
-    UserDto? User
+    DateTime? UpdatedAt
+    
 );
+
 

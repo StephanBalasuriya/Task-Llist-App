@@ -8,6 +8,7 @@ using System.IdentityModel.Tokens.Jwt;
 using System.Text;
 using Microsoft.IdentityModel.Tokens;
 using System.Security.Claims;
+using Microsoft.AspNetCore.Authorization;
 
 namespace WebApplication1.EndPoints;
 
@@ -15,7 +16,7 @@ public static class Signup_Login
 {
     public static void MapSignupLoginEndpoints(this WebApplication app)
     {
-        app.MapPost("/signup", async (CreateUserDto user, TaskStoreContext db) =>
+        app.MapPost("/signup",[AllowAnonymous] async (CreateUserDto user, TaskStoreContext db) =>
                {
                    if (await db.Users.AnyAsync(u => u.Username == user.Username))
                        return Results.BadRequest("Username already exists.");
@@ -34,17 +35,20 @@ public static class Signup_Login
 
         );
 
-        app.MapPost("/login", async (TaskStoreContext db, UserAuthDto login) =>
+        app.MapPost("/login",[AllowAnonymous] async (TaskStoreContext db, UserAuthDto login) =>
     {
+        if (string.IsNullOrWhiteSpace(login.Username) || string.IsNullOrWhiteSpace(login.Password))
+            return Results.BadRequest("Username and password are required.");
+
         var jwtSettings = app.Configuration.GetSection("JwtSettings");
         var secretKey = jwtSettings.GetValue<string>("Secret");
 
         var user = await db.Users.FirstOrDefaultAsync(u => u.Username == login.Username);
-        if (user == null || !BCrypt.Net.BCrypt.Verify(login.PasswordHash, user.PasswordHash))
+        if (user == null || !BCrypt.Net.BCrypt.Verify(login.Password, user.PasswordHash))
             return Results.Unauthorized();
 
         var tokenHandler = new JwtSecurityTokenHandler();
-        var key = Encoding.UTF8.GetBytes(secretKey);
+        var key = Encoding.UTF8.GetBytes(secretKey!);
         var tokenDescriptor = new SecurityTokenDescriptor
         {
             Subject = new ClaimsIdentity(new Claim[]
@@ -68,8 +72,8 @@ public static class Signup_Login
         return Results.Ok("You are authorized!");
     });
 
-        app.UseAuthentication();
-        app.UseAuthorization();
+        // app.UseAuthentication();
+        // app.UseAuthorization();
 
 
 

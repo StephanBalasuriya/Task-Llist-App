@@ -1,4 +1,5 @@
 using System;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace WebApplication1.Models;
 
@@ -24,8 +25,11 @@ public class Tasks
     public DateTime DueDate { get; set; }
 
     public DateTime UpdatedAt { get; set; }
-    
-    public Users? users { get; set; }
 
+
+    // 🔑 Foreign Key
     public int UserId { get; set; }
+
+    // 🔗 Navigation property
+    public Users User { get; set; } = null!;
 }

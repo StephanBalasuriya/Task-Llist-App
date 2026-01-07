@@ -28,13 +28,12 @@ builder.Services.AddAuthentication(options =>
         ValidateAudience = true,
         ValidateLifetime = true,
         ValidateIssuerSigningKey = true,
-        ValidIssuer = jwtSettings.GetValue<string>("Issuer"),
-        ValidAudience = jwtSettings.GetValue<string>("Audience"),
-        IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(secretKey)),
+        ValidIssuer = jwtSettings["Issuer"],
+        ValidAudience = jwtSettings["Audience"],
+        IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(secretKey!)),
         ClockSkew = TimeSpan.Zero
     };
 });
-
 
 //connect to database
 var connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
@@ -47,19 +46,25 @@ builder.Services.AddAuthorization();
 
 var app = builder.Build();
 
+// ================= MIDDLEWARE ORDER (VERY IMPORTANT) =================
+app.UseAuthentication();
+app.UseAuthorization();
+
 //Auto create database tables if they do not exist
 using (var scope = app.Services.CreateScope())
 {
     var dbContext = scope.ServiceProvider.GetRequiredService<TaskStoreContext>();
-    dbContext.Database.EnsureDeleted();
+    // dbContext.Database.EnsureDeleted();
     dbContext.Database.EnsureCreated();
 }
 
 
 app.MapSignupLoginEndpoints();
+
 // app.MapUserEndpoints(); 
 app.MapUserDBEndpoints();
+app.MapTaskEndpoints();
 
 app.Run();
 
-public partial class Program { }
+
