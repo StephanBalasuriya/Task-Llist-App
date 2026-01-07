@@ -122,6 +122,27 @@ public static class CreateDeleteEditGetTasks
             
         });
 
+        // Delete a task
+        group.MapDelete("/delete/{taskId:int}", [Authorize] async (int taskId, ClaimsPrincipal user, TaskStoreContext db) =>
+        {
+            var userId = int.Parse(user.FindFirst(ClaimTypes.NameIdentifier)!.Value);
+
+            var existingTask = await db.Tasks
+                .Where(t => t.Id == taskId && t.UserId == userId)
+                .FirstOrDefaultAsync();
+
+            if (existingTask is null)
+            {
+                return Results.NotFound();
+            }
+
+            db.Tasks.Remove(existingTask);
+            await db.SaveChangesAsync();
+
+            return Results.NoContent();
+        });
+
+
 
 
 
@@ -133,37 +154,7 @@ public static class CreateDeleteEditGetTasks
 
 
 
-//         //update existing game
-//         group.MapPut("/{id}", async (int id, UpdateGameDto updateGameDto, GameStoreContext dbContext) =>
-//         {
-//             // var existingGameIndex = games.FindIndex(g => g.Id == id);
-//             // if (existingGameIndex == -1)
-//             // {
 
-//             var existingGame = await dbContext.Games.FindAsync(id);
-//             if (existingGame is null)
-//             {
-//                 return Results.NotFound();
-//             }
-
-//             // var updatedGame = new GameSummaryDto
-//             // (
-//             //     Id: id,
-//             //     Name: updateGameDto.Name,
-//             //     Genre: updateGameDto.Genre,
-//             //     Price: updateGameDto.Price,
-//             //     ReleaseDate: updateGameDto.ReleaseDate
-//             // );
-
-//             // games[existingGameIndex] = updatedGame;
-//             existingGame.Name = updateGameDto.Name;
-//             existingGame.GenreId = updateGameDto.GenreID;
-//             existingGame.Price = updateGameDto.Price;
-//             existingGame.ReleaseDate = updateGameDto.ReleaseDate;
-//             await dbContext.SaveChangesAsync();
-
-//             return Results.NoContent();
-//         });
 
 //         //delete a game
 //         group.MapDelete("/{id}", async (int id, GameStoreContext dbContext) =>
