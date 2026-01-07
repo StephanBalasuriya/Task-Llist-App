@@ -1,5 +1,5 @@
 
-@token = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJuYW1laWQiOiIxIiwidW5pcXVlX25hbWUiOiJuZXd1c2VyIiwibmJmIjoxNzY3NzY1NjE5LCJleHAiOjE3Njc3NjkyMTksImlhdCI6MTc2Nzc2NTYxOSwiaXNzIjoiaHR0cDovL2xvY2FsaG9zdDo1MDAxLyIsImF1ZCI6Imh0dHA6Ly9sb2NhbGhvc3Q6NTAwMS8ifQ.NiTx7PXx1T0MJ6ooN7i0f35LawXOhNbm8YZIYaDUPE0
+@token = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJuYW1laWQiOiIyIiwidW5pcXVlX25hbWUiOiJuZXd1c2VyMiIsIm5iZiI6MTc2Nzc2NjA0NiwiZXhwIjoxNzY3NzY5NjQ2LCJpYXQiOjE3Njc3NjYwNDYsImlzcyI6Imh0dHA6Ly9sb2NhbGhvc3Q6NTAwMS8iLCJhdWQiOiJodHRwOi8vbG9jYWxob3N0OjUwMDEvIn0.smN6KnqKq4jy1xBASBd4rqVqcgMXoW_eQfyEpPnu8GA
 
 ###
 GET http://localhost:5001/dbusers
@@ -13,9 +13,9 @@ POST http://localhost:5001/signup
 Content-Type: application/json
 
 {
-    "Username": "newuser",
-    "PasswordHash": "SecurePassword123",
-    "Email": "newuser@example.com"
+    "Username": "newuser2",
+    "PasswordHash": "SecurePassword123456",
+    "Email": "newuser123@example.com"
 }
 
 ###
@@ -23,8 +23,8 @@ POST http://localhost:5001/login
 Content-Type: application/json
 
 {
-    "Username": "newuser",
-    "Password": "SecurePassword123"
+    "Username": "newuser2",
+    "Password": "SecurePassword123456"
 }
 
 ###
@@ -53,20 +53,20 @@ Authorization: Bearer {{token}}
 Content-Type: application/json  
 
 {
-    "title": "New Task",
+    "title": "New Task user 5",
     "description": "This is a new task",
     "status": 0,
-    "dueDate": "2024-12-31T23:59:59Z"
+    "dueDate": "2026-01-08T23:59:59Z"
 }
 
 
 ###
-PUT http://localhost:5001/tasks/update/4
+PUT http://localhost:5001/tasks/update/7
 Authorization: Bearer {{token}}
 Content-Type: application/json
 
 {
-    "title": "Updated Task",
+    "title": "Updated Task user2",
     "description": "This task has been updated",
     "status": 1,
     "dueDate": "2024-12-31T23:59:59Z"
