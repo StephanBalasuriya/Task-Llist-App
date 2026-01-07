@@ -1,4 +1,5 @@
 using System;
+using System.Security.Claims;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.EntityFrameworkCore;
 using WebApplication1.Data;
@@ -14,8 +15,9 @@ public static class CreateDeleteEditGetTasks
     {
         var group = app.MapGroup("/tasks");
         //Get all tasks
-        group.MapGet("/{userId}", [Authorize] async (int userId, TaskStoreContext db) =>
+        group.MapGet("/", [Authorize] async (ClaimsPrincipal user, TaskStoreContext db) =>
         {
+            var userId = int.Parse(user.FindFirst(ClaimTypes.NameIdentifier)!.Value);
             var tasks = await db.Tasks
                 .Where(t => t.UserId == userId)
                 .Select(task => new TaskDetailsDto(
@@ -33,34 +35,38 @@ public static class CreateDeleteEditGetTasks
             return Results.Ok(tasks);
         });
         // get task by taskid
-        group.MapGet("/{userId}/{id}", [Authorize] async (int userId, int id, TaskStoreContext db) =>
-        {
-            var task = await db.Tasks
-                .Where(t => t.UserId == userId && t.Id == id)
-                .Select(task => new TaskDetailsDto(
-                    task.Id,
-                    task.Title,
-                    task.Description,
-                    (TaskStatusDto)task.Status,
-                    task.CreatedAt,
-                    task.DueDate,
-                    task.UpdatedAt
-                ))
-                .AsNoTracking()
-                .ToListAsync();
+        group.MapGet("/{taskId:int}", [Authorize] async (int taskId, ClaimsPrincipal user, TaskStoreContext db) =>
+{
+    var userId = int.Parse(user.FindFirst(ClaimTypes.NameIdentifier)!.Value);
 
-            return task is null
-        ? Results.NotFound("Task not found for this user")
-        : Results.Ok(task);
-        });
+    var task = await db.Tasks
+        .Where(t => t.Id == taskId && t.UserId == userId)
+        .Select(t => new TaskDetailsDto(
+            t.Id,
+            t.Title,
+            t.Description,
+            (TaskStatusDto)t.Status,
+            t.CreatedAt,
+            t.DueDate,
+            t.UpdatedAt
+        ))
+        .AsNoTracking()
+        .FirstOrDefaultAsync();
+
+    return task is null ? Results.NotFound() : Results.Ok(task);
+})
+.WithName("GetTaskById");
+
 
         // Create a new task
-        _ = group.MapPost("/{userId}", [Authorize] async (int userId, TaskUpsertDto createTaskDto, TaskStoreContext db) =>
+        _ = group.MapPost("/post", [Authorize] async (ClaimsPrincipal user, TaskUpsertDto createTaskDto, TaskStoreContext db) =>
         {//validation input
             if (string.IsNullOrEmpty(createTaskDto.Title))
             {
                 return Results.BadRequest("Task title cannot be empty.");
             }
+            var userId = int.Parse(user.FindFirst(ClaimTypes.NameIdentifier)!.Value);
+  
             Tasks newTask = new()
             {
                 Title = createTaskDto.Title,
@@ -75,7 +81,7 @@ public static class CreateDeleteEditGetTasks
             await db.SaveChangesAsync();
             return Results.CreatedAtRoute(
                 "GetTaskById",
-                new { userId = newTask.UserId, id = newTask.Id },
+                new {taskId = newTask.Id},
                 new TaskDetailsDto(
                     newTask.Id,
                     newTask.Title,
@@ -89,6 +95,34 @@ public static class CreateDeleteEditGetTasks
 
         });
 
+        //Update existing task
+        group.MapPut("/update/{taskId:int}", [Authorize] async (int taskId, ClaimsPrincipal user, TaskUpsertDto updateTaskDto, TaskStoreContext db) =>
+        {
+            
+            var userId = int.Parse(user.FindFirst(ClaimTypes.NameIdentifier)!.Value);
+
+            var existingTask = await db.Tasks
+                .Where(t => t.Id == taskId && t.UserId == userId)
+                .FirstOrDefaultAsync();
+
+            if (existingTask is null)
+            {
+                return Results.NotFound();
+            }
+
+            existingTask.Title = updateTaskDto.Title;
+            existingTask.Description = updateTaskDto.Description;
+            existingTask.Status = (Models.TaskStatus)updateTaskDto.Status;
+            existingTask.DueDate = (DateTime)updateTaskDto.DueDate;
+            existingTask.UpdatedAt = DateTime.UtcNow;
+
+            await db.SaveChangesAsync();
+
+            return Results.NoContent();
+            
+        });
+
+
 
 
 
@@ -97,63 +131,6 @@ public static class CreateDeleteEditGetTasks
     }
 }
 
-//         
-
-//         //post new game
-//         group.MapPost("/", async (CreateGameDto createGameDto, GameStoreContext dbcontext) =>
-//         {
-
-//             // // validating input
-//             // if (string.IsNullOrEmpty(createGameDto.Name))
-//             // {
-//             //     return Results.BadRequest("Game name cannot be empty.");
-//             // }//when using this method for validation, we have to type this for all inputs
-
-//             // var newGame = new GameDto
-//             // (
-//             //     Id: games.Max(g => g.Id) + 1,
-//             //     Name: createGameDto.Name,
-//             //     Genre: createGameDto.Genre,
-//             //     Price: createGameDto.Price,
-//             //     ReleaseDate: createGameDto.ReleaseDate
-//             // );
-
-//             // games.Add(newGame);
-
-//             // return Results.CreatedAtRoute(
-//             //     "GetGameById",
-//             //     new { id = newGame.Id },
-//             //     newGame
-//             // );
-
-//             Game newGame = new()
-//             {
-//                 Name = createGameDto.Name,
-//                 GenreId = createGameDto.GenreId,
-//                 Price = createGameDto.Price,
-//                 ReleaseDate = createGameDto.ReleaseDate
-//             };
-
-//             dbcontext.Games.Add(newGame);
-//             await dbcontext.SaveChangesAsync();
-
-//             GameDetailsDto gameDto = new(
-//                             newGame.Id,
-//                             newGame.Name,
-//                             newGame.GenreId,
-//                             newGame.Price,
-//                             newGame.ReleaseDate
-//                         );
-
-//             return Results.CreatedAtRoute(
-//                 "GetGameById",
-//                 new { id = newGame.Id },
-//                 gameDto
-//             );
-
-
-
-//         });
 
 
 //         //update existing game

@@ -71,9 +71,21 @@ Content-Type: application/json
 GET http://localhost:5001/profile
 Authorization: Bearer {{token}}
 ###
-GET http://localhost:5001/tasks/1
+GET http://localhost:5001/tasks/
 Authorization: Bearer {{token}}
 
 ###
-GET http://localhost:5001/tasks/1/3
+GET http://localhost:5001/tasks/3
 Authorization: Bearer {{token}}
+
+###
+POST http://localhost:5001/tasks/post
+Authorization: Bearer {{token}}
+Content-Type: application/json  
+
+{
+    "title": "New Task",
+    "description": "This is a new task",
+    "status": 0,
+    "dueDate": "2024-12-31T23:59:59Z"
+}
